@@ -1,0 +1,7 @@
+{
+    "Basic component PJ": {
+        "prefix": "rfpj",
+        "body": "import React from 'react'"
+        "description": "Simple component from PJ"
+    },
+}
