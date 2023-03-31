@@ -119,10 +119,20 @@ _G.packer_plugins = {
     path = "/home/lucca/.local/share/nvim/site/pack/packer/start/friendly-snippets",
     url = "https://github.com/rafamadriz/friendly-snippets"
   },
+  harpoon = {
+    loaded = true,
+    path = "/home/lucca/.local/share/nvim/site/pack/packer/start/harpoon",
+    url = "https://github.com/theprimeagen/harpoon"
+  },
   ["lualine.nvim"] = {
     loaded = true,
     path = "/home/lucca/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
+  },
+  ["markdown-preview.nvim"] = {
+    loaded = true,
+    path = "/home/lucca/.local/share/nvim/site/pack/packer/start/markdown-preview.nvim",
+    url = "https://github.com/iamcco/markdown-preview.nvim"
   },
   ["mason-lspconfig.nvim"] = {
     loaded = true,

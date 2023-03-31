@@ -4,7 +4,7 @@ if not snip_status_ok then
 end
 
 require("luasnip/loaders/from_vscode").lazy_load()
-require("luasnip/loaders/from_vscode").lazy_load({ paths = "~/.config/nvim/snippets/"})
+require("luasnip/loaders/from_lua").lazy_load({ paths = "~/.config/nvim/snippets/"})
 
 ls.config.set_config({
     updateevents = "TextChanged, TextChangedI",

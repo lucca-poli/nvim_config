@@ -24,6 +24,7 @@ return require('packer').startup(function(use)
         'nvim-lualine/lualine.nvim',
         requires = { opt = true }
     }
+    use('theprimeagen/harpoon')
     use('numToStr/Comment.nvim')
     use('JoosepAlviste/nvim-ts-context-commentstring')
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
@@ -31,17 +32,19 @@ return require('packer').startup(function(use)
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
     use('ThePrimeagen/vim-be-good')
+    use('nvim-tree/nvim-web-devicons')
     use {
         'nvim-tree/nvim-tree.lua',
-        requires = {
-            'nvim-tree/nvim-web-devicons', -- optional, for file icons
-        },
-        tag = 'nightly'                    -- optional, updated every week. (see issue #1193)
+        tag = 'nightly' -- optional, updated every week. (see issue #1193)
     }
     use {
         "windwp/nvim-autopairs"
     }
     use { "akinsho/toggleterm.nvim" }
+    use({
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+    })
 
     -- LSP plugins
     use("neovim/nvim-lspconfig")
