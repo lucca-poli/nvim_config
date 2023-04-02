@@ -10,6 +10,7 @@ local sn = ls.snippet_node
 
 local fmt = require("luasnip.extras.fmt").fmt
 local rep = require("luasnip.extras").rep
+local l = require("luasnip.extras").lambda
 
 local snippets, autosnippets = {}, {} --}}}
 
@@ -91,30 +92,6 @@ import {2} from "{1}";
 }))
 table.insert(snippets, defaultImport)
 
-local grabFilename = s("grab", fmt([[
-// list:
-{1}
-
-// and copy of list:
-{2}
-]], {
-    i(1, "placeholder"), -- Input node for variable names
-    f(function(args)
-            local nodes = {}
-            for _, textNodeTable in ipairs(args[1]) do
-                local nodeText = textNodeTable
-
-                nodeText = string.match(nodeText, "([^:]+):")
-                nodeText = string.format("  this.%s = %s;", nodeText, nodeText)
-
-                table.insert(nodes, nodeText)
-            end
-            return nodes
-        end,
-        1)
-}))
-table.insert(snippets, grabFilename)
-
 local pjModels = s("pjmodel", fmt([[
 class {1} {{
     {2}
@@ -128,30 +105,59 @@ export default {1};
 ]], {
     f(return_filename, {}),
     i(1, "typed properties list"),
-    f(function(args)
-            local paramsString = ""
-            for _, nodeText in ipairs(args[1]) do
+    d(2, function(args)
+            local paramsNodes = {}
 
+            local function getNodeText(nodeText)
                 local keywordText = string.match(nodeText, "%s*([%w_]+:%s*[%w_]+)")
                 nodeText = string.format("%s, ", keywordText)
-                paramsString = paramsString .. nodeText
 
+                return nodeText
             end
-            return string.sub(paramsString, 1, -3)
+
+            for index, nodeText in ipairs(args[1]) do
+                nodeText = getNodeText(nodeText)
+
+
+                local choiceNode = c(index, {
+                    t(nodeText),
+                    t(""),
+                })
+
+                table.insert(paramsNodes, choiceNode)
+            end
+            return sn(nil, paramsNodes)
         end,
-        1),
-    f(function(args)
-            local nodes = {}
+        { 1 }),
+    -- l(l._2:sub(1, -3), 2),
+    d(3, function(args)
+            local propertyNodes = {}
+            local jumpIndex = 1
+
             for _, nodeText in ipairs(args[1]) do
+                local keyword = string.match(nodeText, "%s*([^%s]+):.*")
 
-                local keywordText = string.match(nodeText, "%s*([^%s]+):.*")
-                nodeText = string.format("      this.%s = %s;", keywordText, keywordText)
+                if keyword == nil then
+                    keyword = "type a variable"
+                end
 
-                table.insert(nodes, nodeText)
+                if string.find(args[2][1], keyword) == nil then
+                    table.insert(propertyNodes, t({ "", string.format("        this.%s = ", keyword)
+                    }))
+                    table.insert(propertyNodes, c(jumpIndex, {
+                        t("null"),
+                        i(1, "inicialize property")
+                    }))
+                    table.insert(propertyNodes, t(";"))
+                    jumpIndex = jumpIndex + 1
+                else
+                    table.insert(propertyNodes, t({ "", string.format("        this.%s = %s;", keyword, keyword)
+                    }))
+                end
             end
-            return nodes
+            return sn(nil, propertyNodes)
         end,
-        1)
+        { 1, 2 })
 }))
 table.insert(snippets, pjModels)
 
