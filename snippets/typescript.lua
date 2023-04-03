@@ -129,7 +129,6 @@ export default {1};
             return sn(nil, paramsNodes)
         end,
         { 1 }),
-    -- l(l._2:sub(1, -3), 2),
     d(3, function(args)
             local propertyNodes = {}
             local jumpIndex = 1
@@ -155,11 +154,73 @@ export default {1};
                     }))
                 end
             end
+            table.insert(propertyNodes, t({ "", "" }))
             return sn(nil, propertyNodes)
         end,
         { 1, 2 })
 }))
 table.insert(snippets, pjModels)
+
+local pjRepository = s("pjrepository", fmt([[
+import {1} from "../models/{1}";
+
+class {2} {{
+    private {3}: {1}[];
+
+    constructor() {{
+        this.{3} = [];
+    }}
+
+    {4}
+
+}}
+
+export default {2};
+]], {
+    f(function()
+        local filename = return_filename()
+        local modelName = filename:match("(.*)sRepository")
+        return modelName
+    end, {}),
+    f(return_filename, {}),
+    f(function()
+        local filename = return_filename()
+        local propertyName = filename:match("(.*)sRepository"):lower() .. "s"
+        return propertyName
+    end, {}),
+    i(1, "// type the repo methods")
+}))
+table.insert(snippets, pjRepository)
+
+local publicMethod = s("pubmethod", fmt([[
+public {1}({2}): {3} {{
+    {4}
+}}
+]], {
+    i(1, "/* method name */"),
+    i(2, "/* params */"),
+    c(3, {
+        t("void"),
+        i(1, "/* method return type */")
+    }),
+    i(4, "// code"),
+}))
+table.insert(snippets, publicMethod)
+
+local privateMethod = s("primethod", fmt([[
+private {1}({2}): {3} {{
+    {4}
+}}
+]], {
+    i(1, "/* method name */"),
+    i(2, "/* params */"),
+    c(3, {
+        t("void"),
+        i(1, "/* method return type */")
+    }),
+    i(4, "// code"),
+}))
+table.insert(snippets, privateMethod)
 
 local thisProperty = s("thp", fmt([[
 this.{1} = {2};
