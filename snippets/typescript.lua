@@ -96,7 +96,7 @@ local pjModels = s("pjmodel", fmt([[
 class {1} {{
     {2}
 
-    constructor({3}) {{
+    constructor({{{3}}}: {5}) {{
 {4}
     }}
 }}
@@ -104,12 +104,12 @@ class {1} {{
 export default {1};
 ]], {
     f(return_filename, {}),
-    i(1, "typed properties list"),
+    i(1, "// typed properties list"),
     d(2, function(args)
             local paramsNodes = {}
 
             local function getNodeText(nodeText)
-                local keywordText = string.match(nodeText, "%s*([%w_]+:%s*[%w_]+)")
+                local keywordText = nodeText:match("%s*([^:%s]+)")
                 nodeText = string.format("%s, ", keywordText)
 
                 return nodeText
@@ -157,7 +157,31 @@ export default {1};
             table.insert(propertyNodes, t({ "", "" }))
             return sn(nil, propertyNodes)
         end,
-        { 1, 2 })
+        { 1, 2 }),
+    f(function(args)
+        local constructorType = return_filename()
+        local allTypes = {}
+        local omitedTypes = ""
+
+        for _, propertyName in ipairs(args[1]) do
+            propertyName = string.match(propertyName, "%s*([^:%s]+)")
+            table.insert(allTypes, propertyName)
+        end
+
+        for _, propertyName in ipairs(allTypes) do
+            local omitedProperty = string.find(args[2][1], propertyName)
+
+            if omitedProperty == nil then
+                omitedTypes = omitedTypes .. string.format('"%s" | ', propertyName)
+            end
+        end
+
+        if #omitedTypes > 0 then
+            return "Omit<" .. constructorType .. ", " .. string.sub(omitedTypes, 1, -4) .. ">"
+        end
+
+        return constructorType
+    end, { 1, 2 })
 }))
 table.insert(snippets, pjModels)
 
