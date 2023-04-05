@@ -216,6 +216,110 @@ export default {2};
 }))
 table.insert(snippets, pjRepository)
 
+local pjService = s("pjservice", fmt([[
+import {1} from "../models/{1}";
+import {1}sRepository from "../repositories/{1}sRepository";
+
+interface Request {{
+  {4}
+}}
+
+class {3} {{
+  private {2}Repository: {1}sRepository;
+
+  constructor({2}Repository: {1}sRepository) {{
+    this.{2}Repository = {2}Repository;
+  }}
+
+  public execute({{ {5} }}: Request): {6} {{
+    {7}
+  }}
+}}
+export default {3};
+]], {
+    f(function()
+        local filename = return_filename()
+        return string.match(filename, "[A-Z][^A-Z]*(%w+)Service")
+    end, {}),
+    f(function()
+        local filename = return_filename()
+        local model = string.match(filename, "[A-Z][^A-Z]*(%w+)Service")
+        return string.format("%ss", model:lower())
+    end, {}),
+    f(return_filename, {}),
+    i(1, "// RequestDTO types"),
+    f(function (args)
+        local params = ""
+
+        for _, requestParam in ipairs(args[1]) do
+            requestParam = string.match(requestParam, "%s*([^:]+)")
+
+            params = params .. requestParam .. ", "
+        end
+
+        return string.sub(params, 1, -3)
+    end, {1}),
+    i(2, "void"),
+    i(3, "// Service")
+}))
+table.insert(snippets, pjService)
+
+local route = s("route", fmt([[
+{1}Router.{2}("/{3}", (request: Request, response: Response) => {{
+  try {{
+    {4}
+
+    return response.json();
+  }} catch (err) {{
+    return response.status(400).json({{ error: (err as Error).message }});
+  }}
+}});
+]], {
+    f(function()
+        local filename = return_filename()
+        return string.match(filename, "([^%.]+)")
+    end, {}),
+    i(1, "/* method */"),
+    i(2, "/* params */"),
+    i(3, "// route")
+}))
+table.insert(snippets, route)
+
+local routerIndex = s("indexRoute", fmt([[
+
+import {{ Router }} from 'express';
+import {1}Router from './{2}.routes'
+
+const routes = Router();
+
+routes.use('/{2}', {2}Router);
+
+export default routes;
+]], {
+    i(1, "/* router name */"),
+    f(function(args)
+        return args[1][1]
+    end, { 1 })
+}))
+table.insert(snippets, routerIndex)
+
+local defaultRouter = s("defaultRoute", fmt([[
+import {{ Router }} from "express";
+
+const {1}Router = Router();
+
+{2}
+
+export default {1}Router;
+]], {
+    f(function()
+        local filename = return_filename()
+        return string.match(filename, "([^%.]+)")
+    end, {}),
+    i(1, "// routes")
+}))
+table.insert(snippets, defaultRouter)
+
 local publicMethod = s("pubmethod", fmt([[
 public {1}({2}): {3} {{
     {4}
