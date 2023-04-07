@@ -304,7 +304,7 @@ export default routes;
 table.insert(snippets, routerIndex)
 
 local defaultRouter = s("defaultRoute", fmt([[
-import {{ Router }} from "express";
+import {{ Router, Request, Response }} from "express"; 
 
 const {1}Router = Router();
 
