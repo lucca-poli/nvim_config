@@ -52,6 +52,9 @@ require('lspconfig').lua_ls.setup {
 require('lspconfig').tsserver.setup {
     on_attach = on_attach,
 }
+require('lspconfig').prismals.setup {
+    on_attach = on_attach
+}
 require('lspconfig').clangd.setup {
     on_attach = on_attach
 }
