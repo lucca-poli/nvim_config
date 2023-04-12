@@ -52,6 +52,15 @@ require('lspconfig').lua_ls.setup {
 require('lspconfig').tsserver.setup {
     on_attach = on_attach,
 }
+require 'lspconfig'.svelte.setup {
+    on_attach = on_attach,
+}
+require 'lspconfig'.tailwindcss.setup {
+    on_attach = on_attach,
+}
+require 'lspconfig'.jsonls.setup {
+    on_attach = on_attach
+}
 require('lspconfig').prismals.setup {
     on_attach = on_attach
 }
