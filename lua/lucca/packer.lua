@@ -62,4 +62,7 @@ return require('packer').startup(function(use)
     -- Snippets
     use { 'L3MON4D3/LuaSnip', version = "<CurrentMajor>.*" }
     use { 'rafamadriz/friendly-snippets' }
+
+    -- Copilot
+    use { 'github/copilot.vim' }
 end)

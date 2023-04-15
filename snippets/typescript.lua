@@ -92,7 +92,7 @@ import {2} from "{1}";
 }))
 table.insert(snippets, defaultImport)
 
-local pjModels = s("pjmodel", fmt([[
+local classConstructor = s("classC", fmt([[
 class {1} {{
     {2}
 
@@ -183,7 +183,7 @@ export default {1};
         return constructorType
     end, { 1, 2 })
 }))
-table.insert(snippets, pjModels)
+table.insert(snippets, classConstructor)
 
 local pjRepository = s("pjrepository", fmt([[
 import {1} from "../models/{1}";
