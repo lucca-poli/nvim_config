@@ -16,10 +16,26 @@ local on_attach = (function(client, bufnr)
     vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set("n", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+    local active_clients = vim.lsp.get_active_clients()
+    if client.name == 'denols' then
+        for _, client_ in pairs(active_clients) do
+            -- stop tsserver if denols is already active
+            if client_.name == 'tsserver' then
+                client_.stop()
+            end
+        end
+    elseif client.name == 'tsserver' then
+        for _, client_ in pairs(active_clients) do
+            -- prevent tsserver from starting if denols is already active
+            if client_.name == 'denols' then
+                client.stop()
+            end
+        end
+    end
 end)
 
 local config = {
-    virtual_text = false, -- disable virtual text
+    virtual_text = true, -- disable virtual text
     signs = {
         active = signs,   -- show signs
     },
@@ -46,27 +62,33 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
     border = "rounded",
 })
 
-require('lspconfig').lua_ls.setup {
+local nvim_lsp = require('lspconfig')
+
+nvim_lsp.lua_ls.setup {
     on_attach = on_attach
 }
-require('lspconfig').tsserver.setup {
+nvim_lsp.denols.setup {
     on_attach = on_attach,
 }
-require 'lspconfig'.svelte.setup {
+nvim_lsp.tsserver.setup {
     on_attach = on_attach,
 }
-require 'lspconfig'.tailwindcss.setup {
+nvim_lsp.svelte.setup {
     on_attach = on_attach,
 }
-require 'lspconfig'.jsonls.setup {
+nvim_lsp.tailwindcss.setup {
+    on_attach = on_attach,
+    filetypes = { "html", "css", "scss", "typescriptreact", "svelte" },
+}
+nvim_lsp.jsonls.setup {
     on_attach = on_attach
 }
-require('lspconfig').prismals.setup {
+nvim_lsp.prismals.setup {
     on_attach = on_attach
 }
-require('lspconfig').clangd.setup {
+nvim_lsp.clangd.setup {
     on_attach = on_attach
 }
-require('lspconfig').pyright.setup {
+nvim_lsp.pyright.setup {
     on_attach = on_attach
 }

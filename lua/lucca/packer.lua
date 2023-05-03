@@ -28,6 +28,7 @@ return require('packer').startup(function(use)
     use('numToStr/Comment.nvim')
     use('JoosepAlviste/nvim-ts-context-commentstring')
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use 'nvim-treesitter/nvim-treesitter-context'
     use { 'akinsho/bufferline.nvim', tag = "v3.*" }
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
