@@ -35,7 +35,7 @@ local on_attach = (function(client, bufnr)
 end)
 
 local config = {
-    virtual_text = true, -- disable virtual text
+    virtual_text = false, -- disable virtual text
     signs = {
         active = signs,   -- show signs
     },
