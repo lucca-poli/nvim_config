@@ -46,7 +46,7 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
     border = "rounded",
 })
 
-local nvim_lsp = require('lspconfig')
+local nvim_lsp = require("lspconfig")
 
 nvim_lsp.lua_ls.setup {
     on_attach = on_attach
